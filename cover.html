@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>aaa: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">yadro.com/course/api/adapters/aaa/auth.go (0.0%)</option>
+				
+				<option value="file1">yadro.com/course/api/adapters/rest/api.go (0.0%)</option>
+				
+				<option value="file2">yadro.com/course/api/adapters/rest/middleware/auth.go (0.0%)</option>
+				
+				<option value="file3">yadro.com/course/api/adapters/rest/middleware/concurrency.go (0.0%)</option>
+				
+				<option value="file4">yadro.com/course/api/adapters/rest/middleware/rate.go (0.0%)</option>
+				
+				<option value="file5">yadro.com/course/api/adapters/update/update.go (0.0%)</option>
+				
+				<option value="file6">yadro.com/course/api/adapters/words/words.go (0.0%)</option>
+				
+				<option value="file7">yadro.com/course/api/config/config.go (0.0%)</option>
+				
+				<option value="file8">yadro.com/course/update/adapters/db/migrations.go (0.0%)</option>
+				
+				<option value="file9">yadro.com/course/update/adapters/db/storage.go (0.0%)</option>
+				
+				<option value="file10">yadro.com/course/update/adapters/grpc/server.go (0.0%)</option>
+				
+				<option value="file11">yadro.com/course/update/adapters/words/words.go (0.0%)</option>
+				
+				<option value="file12">yadro.com/course/update/adapters/xkcd/xkcd.go (0.0%)</option>
+				
+				<option value="file13">yadro.com/course/update/config/config.go (0.0%)</option>
+				
+				<option value="file14">yadro.com/course/update/core/service.go (0.0%)</option>
+				
+				<option value="file15">yadro.com/course/words/words/words.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package aaa
+
+import (
+        "errors"
+        "fmt"
+        "log/slog"
+        "os"
+        "time"
+)
+
+const secretKey = "something secret here" // token sign key
+const adminRole = "superuser"             // token subject
+
+// Authentication, Authorization, Accounting
+type AAA struct {
+        users    map[string]string
+        tokenTTL time.Duration
+        log      *slog.Logger
+}
+
+func New(tokenTTL time.Duration, log *slog.Logger) (AAA, error) <span class="cov0" title="0">{
+        const adminUser = "ADMIN_USER"
+        const adminPass = "ADMIN_PASSWORD"
+        user, ok := os.LookupEnv(adminUser)
+        if !ok </span><span class="cov0" title="0">{
+                return AAA{}, fmt.Errorf("could not get admin user from enviroment")
+        }</span>
+        <span class="cov0" title="0">password, ok := os.LookupEnv(adminPass)
+        if !ok </span><span class="cov0" title="0">{
+                return AAA{}, fmt.Errorf("could not get admin password from enviroment")
+        }</span>
+
+        <span class="cov0" title="0">return AAA{
+                users:    map[string]string{user: password},
+                tokenTTL: tokenTTL,
+                log:      log,
+        }, nil</span>
+}
+
+func (a AAA) Login(name, password string) (string, error) <span class="cov0" title="0">{
+        return "", errors.New("implement me")
+}</span>
+
+func (a AAA) Verify(tokenString string) error <span class="cov0" title="0">{
+        return errors.New("implement me")
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package rest
+
+import (
+        "log/slog"
+        "net/http"
+
+        "yadro.com/course/api/core"
+)
+
+func NewPingHandler(log *slog.Logger, pingers map[string]core.Pinger) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+        }</span>
+}
+
+type Authenticator interface {
+        Login(user, password string) (string, error)
+}
+
+func NewLoginHandler(log *slog.Logger, auth Authenticator) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+        }</span>
+}
+
+func NewUpdateHandler(log *slog.Logger, updater core.Updater) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+        }</span>
+}
+
+func NewUpdateStatsHandler(log *slog.Logger, updater core.Updater) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+        }</span>
+}
+
+func NewUpdateStatusHandler(log *slog.Logger, updater core.Updater) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+        }</span>
+}
+
+func NewDropHandler(log *slog.Logger, updater core.Updater) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+        }</span>
+}
+
+func NewSearchHandler(log *slog.Logger, searcher core.Searcher) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+        }</span>
+}
+
+func NewSearchIndexHandler(log *slog.Logger, searcher core.Searcher) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package middleware
+
+import (
+        "net/http"
+)
+
+type TokenVerifier interface {
+        Verify(token string) error
+}
+
+func Auth(next http.HandlerFunc, verifier TokenVerifier) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package middleware
+
+import (
+        "net/http"
+)
+
+func Concurrency(next http.HandlerFunc, limit int) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package middleware
+
+import (
+        "net/http"
+)
+
+func Rate(next http.HandlerFunc, rps int) http.HandlerFunc <span class="cov0" title="0">{
+        return func(w http.ResponseWriter, r *http.Request) </span>{<span class="cov0" title="0">
+
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package update
+
+import (
+        "context"
+        "errors"
+        "log/slog"
+
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+        "yadro.com/course/api/core"
+        updatepb "yadro.com/course/proto/update"
+)
+
+type Client struct {
+        log    *slog.Logger
+        client updatepb.UpdateClient
+}
+
+func NewClient(address string, log *slog.Logger) (*Client, error) <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return &amp;Client{
+                client: updatepb.NewUpdateClient(conn),
+                log:    log,
+        }, nil</span>
+}
+
+func (c Client) Ping(ctx context.Context) error <span class="cov0" title="0">{
+        return errors.New("implement me")
+}</span>
+
+func (c Client) Status(ctx context.Context) (core.UpdateStatus, error) <span class="cov0" title="0">{
+        return core.StatusUpdateUnknown, errors.New("unknown status")
+}</span>
+
+func (c Client) Stats(ctx context.Context) (core.UpdateStats, error) <span class="cov0" title="0">{
+        return core.UpdateStats{}, nil
+}</span>
+
+func (c Client) Update(ctx context.Context) error <span class="cov0" title="0">{
+        return errors.New("implement me")
+}</span>
+
+func (c Client) Drop(ctx context.Context) error <span class="cov0" title="0">{
+        return errors.New("implement me")
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package words
+
+import (
+        "context"
+        "errors"
+        "log/slog"
+
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+        wordspb "yadro.com/course/proto/words"
+)
+
+type Client struct {
+        log    *slog.Logger
+        client wordspb.WordsClient
+}
+
+func NewClient(address string, log *slog.Logger) (*Client, error) <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return &amp;Client{
+                client: wordspb.NewWordsClient(conn),
+                log:    log,
+        }, nil</span>
+}
+
+func (c Client) Norm(ctx context.Context, phrase string) ([]string, error) <span class="cov0" title="0">{
+        return nil, nil
+}</span>
+
+func (c Client) Ping(ctx context.Context) error <span class="cov0" title="0">{
+        return errors.New("implement me")
+}</span>
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package config
+
+import (
+        "log"
+        "time"
+
+        "github.com/ilyakaznacheev/cleanenv"
+)
+
+type HTTPConfig struct {
+        Address string        `yaml:"address" env:"API_ADDRESS" env-default:"localhost:80"`
+        Timeout time.Duration `yaml:"timeout" env:"API_TIMEOUT" env-default:"5s"`
+}
+
+type Config struct {
+        LogLevel          string        `yaml:"log_level" env:"LOG_LEVEL" env-default:"DEBUG"`
+        SearchConcurrency int           `yaml:"search_concurrency" env:"SEARCH_CONCURRENCY" env-default:"1"`
+        SearchRate        int           `yaml:"search_rate" env:"SEARCH_RATE" env-default:"1"`
+        HTTPConfig        HTTPConfig    `yaml:"api_server"`
+        WordsAddress      string        `yaml:"words_address" env:"WORDS_ADDRESS" env-default:"words:81"`
+        UpdateAddress     string        `yaml:"update_address" env:"UPDATE_ADDRESS" env-default:"update:82"`
+        SearchAddress     string        `yaml:"search_address" env:"SEARCH_ADDRESS" env-default:"search:83"`
+        TokenTTL          time.Duration `yaml:"token_ttl" env:"TOKEN_TTL" env-default:"24h"`
+}
+
+func MustLoad(configPath string) Config <span class="cov0" title="0">{
+        var cfg Config
+        if err := cleanenv.ReadConfig(configPath, &amp;cfg); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("cannot read config %q: %s", configPath, err)
+        }</span>
+        <span class="cov0" title="0">return cfg</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package db
+
+import (
+        "embed"
+
+        "github.com/golang-migrate/migrate/v4"
+        "github.com/golang-migrate/migrate/v4/database/pgx"
+        "github.com/golang-migrate/migrate/v4/source/iofs"
+)
+
+//go:embed migrations/*.sql
+var migrationFiles embed.FS
+
+func (db *DB) Migrate() error <span class="cov0" title="0">{
+        db.log.Debug("running migration")
+        files, err := iofs.New(migrationFiles, "migrations") // get migrations from
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">driver, err := pgx.WithInstance(db.conn.DB, &amp;pgx.Config{})
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">m, err := migrate.NewWithInstance("iofs", files, "pgx", driver)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">err = m.Up()
+
+        if err != nil </span><span class="cov0" title="0">{
+                if err != migrate.ErrNoChange </span><span class="cov0" title="0">{
+                        db.log.Error("migration failed", "error", err)
+                        return err
+                }</span>
+                <span class="cov0" title="0">db.log.Debug("migration did not change anything")</span>
+        }
+
+        <span class="cov0" title="0">db.log.Debug("migration finished")
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package db
+
+import (
+        "context"
+        "log/slog"
+
+        _ "github.com/jackc/pgx/v5/stdlib"
+        "github.com/jmoiron/sqlx"
+        "yadro.com/course/update/core"
+)
+
+type DB struct {
+        log  *slog.Logger
+        conn *sqlx.DB
+}
+
+func New(log *slog.Logger, address string) (*DB, error) <span class="cov0" title="0">{
+
+        db, err := sqlx.Connect("pgx", address)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Error("connection problem", "address", address, "error", err)
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return &amp;DB{
+                log:  log,
+                conn: db,
+        }, nil</span>
+}
+
+func (db *DB) Add(ctx context.Context, comics core.Comics) error <span class="cov0" title="0">{
+        return nil
+}</span>
+
+func (db *DB) Stats(ctx context.Context) (core.DBStats, error) <span class="cov0" title="0">{
+        var stats core.DBStats
+        return stats, nil
+}</span>
+
+func (db *DB) IDs(ctx context.Context) ([]int, error) <span class="cov0" title="0">{
+        var IDs []int
+        return IDs, nil
+}</span>
+
+func (db *DB) Drop(ctx context.Context) error <span class="cov0" title="0">{
+        return nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package grpc
+
+import (
+        "context"
+
+        "google.golang.org/grpc/codes"
+        "google.golang.org/grpc/status"
+        "google.golang.org/protobuf/types/known/emptypb"
+        updatepb "yadro.com/course/proto/update"
+        "yadro.com/course/update/core"
+)
+
+func NewServer(service core.Updater) *Server <span class="cov0" title="0">{
+        return &amp;Server{service: service}
+}</span>
+
+type Server struct {
+        updatepb.UnimplementedUpdateServer
+        service core.Updater
+}
+
+func (s *Server) Ping(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) <span class="cov0" title="0">{
+        return nil, nil
+}</span>
+
+func (s *Server) Status(ctx context.Context, _ *emptypb.Empty) (*updatepb.StatusReply, error) <span class="cov0" title="0">{
+        return nil, status.Error(codes.Internal, "unknown status from service")
+}</span>
+
+func (s *Server) Update(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) <span class="cov0" title="0">{
+        return nil, nil
+}</span>
+
+func (s *Server) Stats(ctx context.Context, _ *emptypb.Empty) (*updatepb.StatsReply, error) <span class="cov0" title="0">{
+        return nil, nil
+}</span>
+
+func (s *Server) Drop(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) <span class="cov0" title="0">{
+        return nil, nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package words
+
+import (
+        "context"
+        "errors"
+        "log/slog"
+
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+        wordspb "yadro.com/course/proto/words"
+)
+
+type Client struct {
+        log    *slog.Logger
+        client wordspb.WordsClient
+}
+
+func NewClient(address string, log *slog.Logger) (*Client, error) <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return &amp;Client{
+                client: wordspb.NewWordsClient(conn),
+                log:    log,
+        }, nil</span>
+}
+
+func (c Client) Norm(ctx context.Context, phrase string) ([]string, error) <span class="cov0" title="0">{
+        return nil, nil
+}</span>
+
+func (c Client) Ping(ctx context.Context) error <span class="cov0" title="0">{
+        return errors.New("implement me")
+}</span>
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package xkcd
+
+import (
+        "context"
+        "fmt"
+        "log/slog"
+        "net/http"
+        "time"
+
+        "yadro.com/course/update/core"
+)
+
+const lastPath = "/info.0.json"
+
+type Client struct {
+        log    *slog.Logger
+        client http.Client
+        url    string
+}
+
+func NewClient(url string, timeout time.Duration, log *slog.Logger) (*Client, error) <span class="cov0" title="0">{
+        if url == "" </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("empty base url specified")
+        }</span>
+        <span class="cov0" title="0">return &amp;Client{
+                client: http.Client{Timeout: timeout},
+                log:    log,
+                url:    url,
+        }, nil</span>
+}
+
+func (c Client) Get(ctx context.Context, ID int) (core.XKCDInfo, error) <span class="cov0" title="0">{
+        return core.XKCDInfo{}, nil
+}</span>
+
+func (c Client) LastID(ctx context.Context) (int, error) <span class="cov0" title="0">{
+        return 0, nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package config
+
+import (
+        "log"
+        "time"
+
+        "github.com/ilyakaznacheev/cleanenv"
+)
+
+type XKCD struct {
+        URL         string        `yaml:"url" env:"XKCD_URL" env-default:"xkcd.com"`
+        Concurrency int           `yaml:"concurrency" env:"XKCD_CONCURRENCY" env-default:"1"`
+        Timeout     time.Duration `yaml:"timeout" env:"XKCD_TIMEOUT" env-default:"10s"`
+        CheckPeriod time.Duration `yaml:"check_period" env:"XKCD_CHECK_PERIOD" env-default:"1h"`
+}
+
+type Config struct {
+        LogLevel     string `yaml:"log_level" env:"LOG_LEVEL" env-default:"DEBUG"`
+        Address      string `yaml:"update_address" env:"UPDATE_ADDRESS" env-default:"localhost:80"`
+        XKCD         XKCD   `yaml:"xkcd"`
+        DBAddress    string `yaml:"db_address" env:"DB_ADDRESS" env-default:"localhost:82"`
+        WordsAddress string `yaml:"words_address" env:"WORDS_ADDRESS" env-default:"localhost:81"`
+}
+
+func MustLoad(configPath string) Config <span class="cov0" title="0">{
+        var cfg Config
+        if err := cleanenv.ReadConfig(configPath, &amp;cfg); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("cannot read config %q: %s", configPath, err)
+        }</span>
+        <span class="cov0" title="0">return cfg</span>
+}
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package core
+
+import (
+        "context"
+        "fmt"
+        "log/slog"
+)
+
+type Service struct {
+        log         *slog.Logger
+        db          DB
+        xkcd        XKCD
+        words       Words
+        concurrency int
+}
+
+func NewService(
+        log *slog.Logger, db DB, xkcd XKCD, words Words, concurrency int,
+) (*Service, error) <span class="cov0" title="0">{
+        if concurrency &lt; 1 </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("wrong concurrency specified: %d", concurrency)
+        }</span>
+        <span class="cov0" title="0">return &amp;Service{
+                log:         log,
+                db:          db,
+                xkcd:        xkcd,
+                words:       words,
+                concurrency: concurrency,
+        }, nil</span>
+}
+
+func (s *Service) Update(ctx context.Context) (err error) <span class="cov0" title="0">{
+        return nil
+}</span>
+
+func (s *Service) Stats(ctx context.Context) (ServiceStats, error) <span class="cov0" title="0">{
+        return ServiceStats{}, nil
+}</span>
+
+func (s *Service) Status(ctx context.Context) ServiceStatus <span class="cov0" title="0">{
+        return StatusIdle
+}</span>
+
+func (s *Service) Drop(ctx context.Context) error <span class="cov0" title="0">{
+        return nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package words
+
+func Norm(phrase string) []string <span class="cov0" title="0">{
+        return nil
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

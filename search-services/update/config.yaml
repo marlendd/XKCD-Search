@@ -1,0 +1,9 @@
+log_level: DEBUG
+update_address: localhost:81
+words_address: localhost:82
+db_address: localhost:1234
+xkcd:
+  url: https://xkcd.com
+  concurrency: 10
+  check_period: 1h
+  timeout: 10s

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package words;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "yadro.com/course/proto/words";
+
+message WordsRequest {
+  string phrase = 1;
+}
+
+message WordsReply {
+  repeated string words = 1;
+}
+
+// Service
+service Words {
+  rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  // Send name, receive greeting
+  rpc Norm(WordsRequest) returns (WordsReply) {}
+}

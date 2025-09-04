@@ -1,0 +1,4 @@
+include:
+  - project: education/golang/automation/ci
+    ref: master
+    file: test.yml

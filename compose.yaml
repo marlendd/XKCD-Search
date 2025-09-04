@@ -1,0 +1,115 @@
+services:
+
+  api:
+    image: api:latest
+    build:
+      context: search-services
+      dockerfile: Dockerfile.api
+    container_name: api
+    restart: unless-stopped
+    ports:
+      - 28080:8080
+    volumes:
+      - ./search-services/api/config.yaml:/config.yaml
+    environment:
+      - ADMIN_USER=admin
+      - ADMIN_PASSWORD=password
+      - TOKEN_TTL=2m
+      - API_ADDRESS=:8080
+      - WORDS_ADDRESS=words:8080
+      - UPDATE_ADDRESS=update:8080
+      - SEARCH_ADDRESS=search:8080
+      - SEARCH_CONCURRENCY=10
+      - SEARCH_RATE=100
+    depends_on:
+      - words
+      - update
+      - search
+
+  words:
+    image: words:latest
+    build:
+      context: search-services
+      dockerfile: Dockerfile.words
+    container_name: words
+    restart: unless-stopped
+    ports:
+      - 28081:8080
+    volumes:
+      - ./search-services/words/config.yaml:/config.yaml
+    environment:
+      - WORDS_ADDRESS=:8080
+
+  update:
+    image: update:latest
+    build:
+      context: search-services
+      dockerfile: Dockerfile.update
+    container_name: update
+    restart: unless-stopped
+    ports:
+      - 28082:8080
+    volumes:
+      - ./search-services/update/config.yaml:/config.yaml
+    environment:
+      - UPDATE_ADDRESS=:8080
+      - DB_ADDRESS=postgres://postgres:password@postgres:5432/postgres
+      - XKCD_URL=https://xkcd.com
+      - XKCD_CONCURRENCY=10
+      - WORDS_ADDRESS=words:8080
+      - BROKER_ADDRESS=nats://nats:4222
+    depends_on:
+      postgres:
+        condition: service_healthy
+      words:
+        condition: service_started
+      nats:
+        condition: service_started
+
+  tests:
+    image: tests:latest
+    build: tests
+    container_name: tests
+    restart: "no"
+    entrypoint: "true"
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: unless-stopped
+    ports:
+      - "18888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@test.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_DISABLE_POSTFIX: "true"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+  nats:
+    image: nats
+    ports:
+      - "4222:4222"
+
+volumes:
+  postgres:
+  pgadmin:
