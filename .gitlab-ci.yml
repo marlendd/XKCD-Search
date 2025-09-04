@@ -1,4 +1,4 @@
 include:
-  - project: golang/automation/ci
+  - project: education/golang/automation/ci
     ref: master
     file: test.yml

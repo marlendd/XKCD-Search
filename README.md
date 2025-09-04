@@ -49,7 +49,7 @@ HTTP Unauthorized.
 файлом через флаг -config, так и через переменные среды, в этом задании -
 ADMIN_USER, ADMIN_PASSWORD, TOKEN_TTL, API_ADDRESS, WORDS_ADDRESS, UPDATE_ADDRESS,
 SEARCH_ADDRESS, SEARCH_CONCURRENCY, SEARCH_RATE. Все они уже добавлены в compose.yaml.
-4. Используется golang 1.24+, slog логгер.
+4. Используется golang 1.25+, slog логгер.
 
 ## Материалы для ознакомления
 
