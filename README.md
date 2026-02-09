@@ -35,6 +35,34 @@ ADMIN_USER и ADMIN_PASSWORD. "/api/login" проверяет пользоват
 HTTP Header вида "Authorization: Token выданный_токен_здесь". Если не удалось проверить токен -
 HTTP Unauthorized.
 
+Для тестирования search rate (endpoint isearch) предлагается использовать
+[bombardier](https://github.com/codesenberg/bombardier) (make tools его установит):
+
+``` bash
+make tools
+make up
+
+TOKEN=$(curl -s -X POST -d '{"name": "admin", "password": "password"}' localhost:28080/api/login)
+
+bombardier -H "Authorization: Token $TOKEN" 'localhost:28080/api/isearch?phrase=linux'
+Bombarding http://localhost:28080/api/isearch?phrase=linux for 10s using 125 connection(s)
+[========================================================================================] 10s
+Done!
+Statistics        Avg      Stdev        Max
+  Reqs/sec       100.03       2.25     104.67
+  Latency         1.18s   228.71ms      1.25s
+  HTTP codes:
+    1xx - 0, 2xx - 1125, 3xx - 0, 4xx - 0, 5xx - 0
+    others - 0
+  Throughput:   148.12KB/s
+
+```
+
+Как видно из примера запуска, по умолчанию мы "бомбардировали" isearch 125 клиентами в течение
+10 секунд. Если запустить то же самое для search endpoint, то мы должны увидеть множество ошибок,
+так как требуется возвращать HTTP status 503 для "лишних". В то же время для 10 клиентов не должно
+быть ошибок, помним про search concurrency.
+
 Предлагается сервис проверки и выдачи токенов реализовать в адаптере - это позволит потом плавно
 перейти к разработке отдельного сервиса AAA (Authentication, Authorization, Accounting).
 
