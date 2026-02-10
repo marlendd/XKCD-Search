@@ -81,7 +81,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: [ "CMD", "pg_isready" ]
       interval: 10s
       retries: 5
       start_period: 30s
@@ -102,6 +102,33 @@ services:
     depends_on:
       - postgres
 
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:v1.125.0
+    container_name: victoriametrics
+    ports:
+      - 8428:8428
+    volumes:
+      - vmdata:/storage
+      - ./metrics/promscrape.yml:/etc/promscrape.yml
+    command:
+      - "--storageDataPath=/storage"
+      - "--httpListenAddr=:8428"
+      - "--promscrape.config=/etc/promscrape.yml"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:12.2.0
+    container_name: grafana
+    depends_on:
+      - "victoriametrics"
+    ports:
+      - 3000:3000
+    volumes:
+      - grafanadata:/var/lib/grafana
+    restart: unless-stopped
+
 volumes:
   postgres:
   pgadmin:
+  vmdata:
+  grafanadata:

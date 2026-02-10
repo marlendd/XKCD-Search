@@ -7,6 +7,11 @@ import (
 	"yadro.com/course/api/core"
 )
 
+func NewMetricsHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+	}
+}
+
 func NewPingHandler(log *slog.Logger, pingers map[string]core.Pinger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 	}
