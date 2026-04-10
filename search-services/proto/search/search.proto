@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package search;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "yadro.com/course/proto/search";
+
+message SearchRequest {
+  int64 limit = 1;
+  string phrase = 2;
+}
+
+message SearchResult {
+  int64 id = 1;
+  string url = 2;
+}
+
+message SearchReply {
+  repeated SearchResult comics = 1;
+}
+
+service Search {
+  rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc Search(SearchRequest) returns (SearchReply) {}
+  rpc ISearch(SearchRequest) returns (SearchReply) {}
+}

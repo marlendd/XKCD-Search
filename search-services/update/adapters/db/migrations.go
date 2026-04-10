@@ -13,7 +13,7 @@ var migrationFiles embed.FS
 
 func (db *DB) Migrate() error {
 	db.log.Debug("running migration")
-	files, err := iofs.New(migrationFiles, "migrations") // get migrations from
+	files, err := iofs.New(migrationFiles, "migrations")
 	if err != nil {
 		return err
 	}
@@ -27,7 +27,6 @@ func (db *DB) Migrate() error {
 	}
 
 	err = m.Up()
-
 	if err != nil {
 		if err != migrate.ErrNoChange {
 			db.log.Error("migration failed", "error", err)

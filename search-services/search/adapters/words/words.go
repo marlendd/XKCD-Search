@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 	wordspb "yadro.com/course/proto/words"
-	"yadro.com/course/update/core"
+	"yadro.com/course/search/core"
 )
 
 type Client struct {
@@ -29,6 +29,11 @@ func NewClient(address string, log *slog.Logger) (*Client, error) {
 	}, nil
 }
 
+func (c Client) Ping(ctx context.Context) error {
+	_, err := c.client.Ping(ctx, nil)
+	return err
+}
+
 func (c Client) Norm(ctx context.Context, phrase string) ([]string, error) {
 	reply, err := c.client.Norm(ctx, &wordspb.WordsRequest{Phrase: phrase})
 	if err != nil {
@@ -38,9 +43,4 @@ func (c Client) Norm(ctx context.Context, phrase string) ([]string, error) {
 		return nil, err
 	}
 	return reply.Words, nil
-}
-
-func (c Client) Ping(ctx context.Context) error {
-	_, err := c.client.Ping(ctx, nil)
-	return err
 }
