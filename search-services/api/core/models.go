@@ -1,5 +1,7 @@
 package core
 
+import "github.com/golang-jwt/jwt/v5"
+
 type UpdateStatus string
 
 const (
@@ -7,6 +9,13 @@ const (
 	StatusUpdateIdle    UpdateStatus = "idle"
 	StatusUpdateRunning UpdateStatus = "running"
 )
+
+var jwtMethod jwt.SigningMethod = jwt.SigningMethodHS256
+
+func GetJWTMethod() jwt.SigningMethod {
+    return jwtMethod
+}
+
 
 type UpdateStats struct {
 	WordsTotal    int

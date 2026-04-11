@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/VictoriaMetrics/metrics"
 	"yadro.com/course/api/core"
 )
 
@@ -37,8 +38,14 @@ type searchResponse struct {
 	Total  int             `json:"total"`
 }
 
+type loginRequest struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
 func NewMetricsHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		metrics.WritePrometheus(w, true)
 	}
 }
 
@@ -48,6 +55,34 @@ type Authenticator interface {
 
 func NewLoginHandler(log *slog.Logger, auth Authenticator) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if err := r.Body.Close(); err != nil {
+				log.Error("failed to close request body", "error", err)
+			}
+		}()
+
+		creds := loginRequest{}
+		if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
+			log.Error("failed to decode json", "error", err)
+			http.Error(w, "invalid request", http.StatusBadRequest)
+			return
+		}
+
+		token, err := auth.Login(creds.Name, creds.Password)
+		if err != nil {
+			if errors.Is(err, core.ErrNotAuthorized) {
+				log.Info("unauthorized")
+				http.Error(w, "user unauthorized", http.StatusUnauthorized)
+				return
+			}
+			log.Error("failed to login", "error", err)
+			http.Error(w, "failed to login", http.StatusInternalServerError)
+			return
+		}
+
+		if _, err := w.Write([]byte(token)); err != nil {
+			log.Error("failed to write response", "error", err)
+		}
 	}
 }
 
