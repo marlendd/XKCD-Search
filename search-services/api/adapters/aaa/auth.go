@@ -65,7 +65,7 @@ func (a AAA) Verify(tokenString string) error {
 	token, err := jwt.ParseWithClaims(
 		tokenString, &claims, func(t *jwt.Token) (any, error) {
 			return []byte(secretKey), nil
-		})
+		}, jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}))
 	if err != nil || !token.Valid || claims.Subject != adminRole {
 		a.log.Error("invalid token", "error", err)
 		return core.ErrNotAuthorized
