@@ -1,3 +1,7 @@
+test:
+	go test -coverprofile=cover.out ./...
+	go tool cover -html=cover.out -o cover.html
+
 lint: protolint golint
 
 protobuf:
@@ -16,8 +20,9 @@ protolint:
 
 golint:
 	golangci-lint run -E gocritic -v ./...
-
-test:
+	
+test-cover:
 	go test -race -coverprofile cover.out \
-		$(shell go list ./... | egrep -v 'yadro.com/course/(proto|api$$|update$$|words$$|search$$)')
+		$$(go list ./... | grep -E -v 'yadro.com/course/(proto|api$$|update$$|words$$|search$$)')
 	go tool cover -html cover.out -o cover.html
+	go tool cover -func cover.out | grep total | awk '{print "Total Coverage: " $$3}'

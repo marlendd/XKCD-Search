@@ -1,5 +1,7 @@
 package core
 
+import "github.com/golang-jwt/jwt/v5"
+
 type UpdateStatus string
 
 const (
@@ -8,6 +10,13 @@ const (
 	StatusUpdateRunning UpdateStatus = "running"
 )
 
+var jwtMethod jwt.SigningMethod = jwt.SigningMethodHS256
+
+func GetJWTMethod() jwt.SigningMethod {
+    return jwtMethod
+}
+
+
 type UpdateStats struct {
 	WordsTotal    int
 	WordsUnique   int
@@ -15,8 +24,11 @@ type UpdateStats struct {
 	ComicsTotal   int
 }
 
-type Comics struct {
-	ID    int
-	URL   string
-	Score int
+type Comic struct {
+	ID  int
+	URL string
+}
+
+type SearchResult struct {
+	Comics []Comic
 }

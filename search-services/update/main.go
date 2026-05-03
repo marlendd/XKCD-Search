@@ -14,6 +14,7 @@ import (
 	updatepb "yadro.com/course/proto/update"
 	"yadro.com/course/update/adapters/db"
 	updategrpc "yadro.com/course/update/adapters/grpc"
+	"yadro.com/course/update/adapters/nats"
 	"yadro.com/course/update/adapters/words"
 	"yadro.com/course/update/adapters/xkcd"
 	"yadro.com/course/update/config"
@@ -61,9 +62,15 @@ func run(cfg config.Config, log *slog.Logger) error {
 	if err != nil {
 		return fmt.Errorf("failed create Words client: %v", err)
 	}
+	
+	// message broker
+	publisher, err := nats.New(cfg.BrokerAddress)
+	if err != nil {
+		return fmt.Errorf("failed create message broker: %v", err)
+	}
 
 	// service
-	updater, err := core.NewService(log, storage, xkcd, words, cfg.XKCD.Concurrency)
+	updater, err := core.NewService(log, storage, xkcd, words, cfg.XKCD.Concurrency, publisher)
 	if err != nil {
 		return fmt.Errorf("failed create Update service: %v", err)
 	}
@@ -73,6 +80,8 @@ func run(cfg config.Config, log *slog.Logger) error {
 	if err != nil {
 		return fmt.Errorf("failed to listen: %v", err)
 	}
+
+	
 
 	s := grpc.NewServer()
 	updatepb.RegisterUpdateServer(s, updategrpc.NewServer(updater))

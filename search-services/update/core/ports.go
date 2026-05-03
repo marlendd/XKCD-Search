@@ -26,3 +26,7 @@ type XKCD interface {
 type Words interface {
 	Norm(ctx context.Context, phrase string) ([]string, error)
 }
+
+type Publisher interface {
+	Publish(subject string, data []byte) error
+}

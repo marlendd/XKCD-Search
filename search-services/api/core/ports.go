@@ -2,6 +2,8 @@ package core
 
 import "context"
 
+//go:generate mockgen -source=ports.go -destination=../mocks/mocks.go -package=mocks
+
 type Normalizer interface {
 	Norm(context.Context, string) ([]string, error)
 }
@@ -18,6 +20,9 @@ type Updater interface {
 }
 
 type Searcher interface {
-	Search(context.Context, string, int) ([]Comics, error)
-	SearchIndex(context.Context, string, int) ([]Comics, error)
+	Search(context.Context, string, int) (SearchResult, error)
+}
+
+type ISearcher interface {
+	ISearch(context.Context, string, int) (SearchResult, error)
 }

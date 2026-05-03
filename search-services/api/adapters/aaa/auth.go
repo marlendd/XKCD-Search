@@ -1,11 +1,13 @@
 package aaa
 
 import (
-	"errors"
 	"fmt"
 	"log/slog"
 	"os"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"yadro.com/course/api/core"
 )
 
 const secretKey = "something secret here" // token sign key
@@ -38,9 +40,36 @@ func New(tokenTTL time.Duration, log *slog.Logger) (AAA, error) {
 }
 
 func (a AAA) Login(name, password string) (string, error) {
-	return "", errors.New("implement me")
+	storedPassword, ok := a.users[name]
+	if !ok || storedPassword != password {
+		a.log.Info("wrong login or password")
+		return "", core.ErrNotAuthorized
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
+		Subject:   adminRole,
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(a.tokenTTL)),
+	})
+
+	tokenString, err := token.SignedString([]byte(secretKey))
+	if err != nil {
+		return "", core.ErrNotAuthorized
+	}
+
+	return tokenString, nil
 }
 
 func (a AAA) Verify(tokenString string) error {
-	return errors.New("implement me")
+	claims := jwt.RegisteredClaims{}
+
+	token, err := jwt.ParseWithClaims(
+		tokenString, &claims, func(t *jwt.Token) (any, error) {
+			return []byte(secretKey), nil
+		}, jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}))
+	if err != nil || !token.Valid || claims.Subject != adminRole {
+		a.log.Error("invalid token", "error", err)
+		return core.ErrNotAuthorized
+	}
+
+	return nil
 }

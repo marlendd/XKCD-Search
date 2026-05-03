@@ -105,11 +105,65 @@ services:
     depends_on:
       - postgres
 
+  search:
+    image: search:latest
+    build:
+      context: search-services
+      dockerfile: Dockerfile.search
+    container_name: search
+    restart: unless-stopped
+    ports:
+      - 28083:8080
+    volumes:
+      - ./search-services/search/config.yaml:/config.yaml
+    environment:
+      - SEARCH_ADDRESS=:8080
+      - DB_ADDRESS=postgres://postgres:password@postgres:5432/postgres
+      - WORDS_ADDRESS=words:8080
+      - INDEX_TTL=24h
+      - BROKER_ADDRESS=nats://nats:4222
+    depends_on:
+      postgres:
+        condition: service_healthy
+      words:
+        condition: service_started
+      nats:
+        condition: service_started
+
+
   nats:
     image: nats
+    container_name: nats
     ports:
       - "4222:4222"
+
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:v1.125.0
+    container_name: victoriametrics
+    ports:
+      - 8428:8428
+    volumes:
+      - vmdata:/storage
+      - ./metrics/promscrape.yml:/etc/promscrape.yml
+    command:
+      - "--storageDataPath=/storage"
+      - "--httpListenAddr=:8428"
+      - "--promscrape.config=/etc/promscrape.yml"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:12.2.0
+    container_name: grafana
+    depends_on:
+      - "victoriametrics"
+    ports:
+      - 3000:3000
+    volumes:
+      - grafanadata:/var/lib/grafana
+    restart: unless-stopped
 
 volumes:
   postgres:
   pgadmin:
+  vmdata:
+  grafanadata:

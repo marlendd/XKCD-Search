@@ -2,6 +2,7 @@ log_level: DEBUG
 update_address: localhost:81
 words_address: localhost:82
 db_address: localhost:1234
+broker_address: localhost:4222
 xkcd:
   url: https://xkcd.com
   concurrency: 10
