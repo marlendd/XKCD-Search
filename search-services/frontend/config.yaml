@@ -1,0 +1,5 @@
+log_level: DEBUG
+frontend_address: :8080
+base_url: http://api:8080
+token_ttl: 24h
+timeout: 5s

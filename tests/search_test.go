@@ -24,6 +24,7 @@ func TestSearch(t *testing.T) {
 	token := login(t)
 	_, err := update(token)
 	require.NoError(t, err, "could not run update")
+	waitForIdle(t, 8*time.Minute)
 	t.Run("no phrase", SearchNoPhrase)
 	t.Run("bad limit minus", SearchBadLimitMinus)
 	t.Run("bad limit alpha", SearchBadLimitAlpha)
@@ -138,6 +139,7 @@ func IndexSearchPhrases(t *testing.T) {
 	token := login(t)
 	_, err = update(token)
 	require.NoError(t, err, "could not run update")
+	waitForIdle(t, 8*time.Minute)
 	time.Sleep(30 * time.Second)
 
 	testCases := []struct {
