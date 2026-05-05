@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
 	"github.com/marlendd/XKCD-Search/api/core"
 	"github.com/marlendd/XKCD-Search/api/mocks"
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestNewLoginHandler(t *testing.T) {
@@ -377,7 +377,7 @@ func TestNewUpdateStatusHandler(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Contains(t, rec.Body.String(), `"idle"`)
-		
+
 	})
 	t.Run("bad status", func(t *testing.T) {
 		mockUpdater.EXPECT().

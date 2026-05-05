@@ -10,7 +10,7 @@ func Concurrency(next http.HandlerFunc, limit int) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		select {
 		case limitChan <- struct{}{}:
-			defer func(){ <-limitChan }()
+			defer func() { <-limitChan }()
 			next(w, r)
 		default:
 			w.WriteHeader(http.StatusServiceUnavailable)

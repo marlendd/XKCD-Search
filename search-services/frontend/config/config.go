@@ -9,11 +9,11 @@ import (
 )
 
 type Config struct {
-	LogLevel   string        `yaml:"log_level" env:"LOG_LEVEL" env-default:"DEBUG"`
-	Address    string        `yaml:"frontend_address" env:"FRONTEND_ADDRESS" env-default:"localhost:8080"`
-	TokenTTL   time.Duration `yaml:"token_ttl" env:"TOKEN_TTL" env-default:"24h"`
-	BaseURL    string        `yaml:"base_url" env:"BASE_URL" env-default:"http://localhost:28080"`
-	Timeout    time.Duration `yaml:"timeout" env:"TIMEOUT" env-default:"5s"`
+	LogLevel string        `yaml:"log_level" env:"LOG_LEVEL" env-default:"DEBUG"`
+	Address  string        `yaml:"frontend_address" env:"FRONTEND_ADDRESS" env-default:"localhost:8080"`
+	TokenTTL time.Duration `yaml:"token_ttl" env:"TOKEN_TTL" env-default:"24h"`
+	BaseURL  string        `yaml:"base_url" env:"BASE_URL" env-default:"http://localhost:28080"`
+	Timeout  time.Duration `yaml:"timeout" env:"TIMEOUT" env-default:"5s"`
 }
 
 func MustLoad(configPath string) Config {

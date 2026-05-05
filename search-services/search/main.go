@@ -9,8 +9,6 @@ import (
 	"os"
 	"os/signal"
 
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 	searchpb "github.com/marlendd/XKCD-Search/proto/search"
 	"github.com/marlendd/XKCD-Search/search/adapters/db"
 	searchgrpc "github.com/marlendd/XKCD-Search/search/adapters/grpc"
@@ -19,6 +17,8 @@ import (
 	"github.com/marlendd/XKCD-Search/search/adapters/words"
 	"github.com/marlendd/XKCD-Search/search/config"
 	"github.com/marlendd/XKCD-Search/search/core"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {

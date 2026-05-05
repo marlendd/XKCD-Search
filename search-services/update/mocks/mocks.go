@@ -13,8 +13,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	gomock "go.uber.org/mock/gomock"
 	core "github.com/marlendd/XKCD-Search/update/core"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockUpdater is a mock of Updater interface.

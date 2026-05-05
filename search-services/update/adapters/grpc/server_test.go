@@ -5,15 +5,15 @@ import (
 	"errors"
 	"testing"
 
+	updatepb "github.com/marlendd/XKCD-Search/proto/update"
+	updategrpc "github.com/marlendd/XKCD-Search/update/adapters/grpc"
+	"github.com/marlendd/XKCD-Search/update/core"
+	"github.com/marlendd/XKCD-Search/update/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-	updatepb "github.com/marlendd/XKCD-Search/proto/update"
-	updategrpc "github.com/marlendd/XKCD-Search/update/adapters/grpc"
-	"github.com/marlendd/XKCD-Search/update/core"
-	"github.com/marlendd/XKCD-Search/update/mocks"
 )
 
 func newServer(t *testing.T) (*updategrpc.Server, *mocks.MockUpdater) {

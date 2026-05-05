@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"go.uber.org/mock/gomock"
 	"github.com/marlendd/XKCD-Search/search/adapters/initiator"
 	"github.com/marlendd/XKCD-Search/search/mocks"
+	"go.uber.org/mock/gomock"
 )
 
 func TestRun(t *testing.T) {

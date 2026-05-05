@@ -6,8 +6,8 @@ type Comic struct {
 }
 
 type StoredComic struct {
-	ID  int
-	URL string
+	ID    int
+	URL   string
 	Words []string
 }
 

@@ -10,13 +10,13 @@ import (
 //go:generate mockgen -source=ports.go -destination=../mocks/mocks.go -package=mocks
 
 type Index struct {
-	idx map[string][]int
+	idx    map[string][]int
 	comics map[int]Comic
-	mu  sync.RWMutex
+	mu     sync.RWMutex
 }
 
 type comicScore struct {
-	ID int
+	ID    int
 	Score int
 }
 
@@ -55,7 +55,7 @@ func (s *Service) ISearch(ctx context.Context, phrase string, limit int) (Search
 	if err != nil {
 		return SearchResult{}, err
 	}
-	scores := make(map[int] int, len(norm))
+	scores := make(map[int]int, len(norm))
 
 	s.index.mu.RLock()
 	defer s.index.mu.RUnlock()
@@ -71,7 +71,7 @@ func (s *Service) ISearch(ctx context.Context, phrase string, limit int) (Search
 
 	for id, score := range scores {
 		comics = append(comics, comicScore{
-			ID: id,
+			ID:    id,
 			Score: score,
 		})
 	}
@@ -107,7 +107,7 @@ func (s *Service) BuildIndex(ctx context.Context) error {
 			idx[word] = append(idx[word], comic.ID)
 		}
 		comicsMap[comic.ID] = Comic{
-			ID: comic.ID,
+			ID:  comic.ID,
 			URL: comic.URL,
 		}
 	}

@@ -3,8 +3,8 @@ package words_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/marlendd/XKCD-Search/words/words"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNorm(t *testing.T) {

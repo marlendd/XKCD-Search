@@ -18,10 +18,10 @@ func New(address string) (*Publisher, error) {
 }
 
 func (p *Publisher) Publish(subject string, data []byte) error {
-    if err := p.conn.Publish(subject, data); err != nil {
-        return err
-    }
-    return p.conn.Flush()
+	if err := p.conn.Publish(subject, data); err != nil {
+		return err
+	}
+	return p.conn.Flush()
 }
 
 func (p *Publisher) Close() {

@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/marlendd/XKCD-Search/api/config"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMustLoad(t *testing.T) {

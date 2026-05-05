@@ -13,9 +13,8 @@ const (
 var jwtMethod jwt.SigningMethod = jwt.SigningMethodHS256
 
 func GetJWTMethod() jwt.SigningMethod {
-    return jwtMethod
+	return jwtMethod
 }
-
 
 type UpdateStats struct {
 	WordsTotal    int

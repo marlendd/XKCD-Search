@@ -5,13 +5,13 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
-	"google.golang.org/protobuf/types/known/emptypb"
+	searchpb "github.com/marlendd/XKCD-Search/proto/search"
 	searchgrpc "github.com/marlendd/XKCD-Search/search/adapters/grpc"
 	"github.com/marlendd/XKCD-Search/search/core"
 	"github.com/marlendd/XKCD-Search/search/mocks"
-	searchpb "github.com/marlendd/XKCD-Search/proto/search"
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func newServer(t *testing.T) (*searchgrpc.Server, *mocks.MockSearcher, *mocks.MockISearcher) {

@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 
+	updatepb "github.com/marlendd/XKCD-Search/proto/update"
+	"github.com/marlendd/XKCD-Search/update/core"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-	updatepb "github.com/marlendd/XKCD-Search/proto/update"
-	"github.com/marlendd/XKCD-Search/update/core"
 )
 
 func NewServer(service core.Updater) *Server {

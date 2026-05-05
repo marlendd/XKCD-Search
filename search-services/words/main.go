@@ -10,13 +10,13 @@ import (
 	"os/signal"
 
 	"github.com/ilyakaznacheev/cleanenv"
+	wordspb "github.com/marlendd/XKCD-Search/proto/words"
+	"github.com/marlendd/XKCD-Search/words/words"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-	wordspb "github.com/marlendd/XKCD-Search/proto/words"
-	"github.com/marlendd/XKCD-Search/words/words"
 )
 
 type Config struct {

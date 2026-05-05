@@ -13,10 +13,10 @@ import (
 	context "context"
 	reflect "reflect"
 
+	words "github.com/marlendd/XKCD-Search/proto/words"
 	gomock "go.uber.org/mock/gomock"
 	grpc "google.golang.org/grpc"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	words "github.com/marlendd/XKCD-Search/proto/words"
 )
 
 // MockWordsClient is a mock of WordsClient interface.

@@ -13,8 +13,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	gomock "go.uber.org/mock/gomock"
 	core "github.com/marlendd/XKCD-Search/api/core"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockNormalizer is a mock of Normalizer interface.

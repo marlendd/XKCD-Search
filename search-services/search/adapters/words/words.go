@@ -4,12 +4,12 @@ import (
 	"context"
 	"log/slog"
 
+	wordspb "github.com/marlendd/XKCD-Search/proto/words"
+	"github.com/marlendd/XKCD-Search/search/core"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
-	wordspb "github.com/marlendd/XKCD-Search/proto/words"
-	"github.com/marlendd/XKCD-Search/search/core"
 )
 
 //go:generate mockgen -destination=../../mocks/mock_words_client.go -package=mocks github.com/marlendd/XKCD-Search/proto/words WordsClient

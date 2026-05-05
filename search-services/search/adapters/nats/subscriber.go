@@ -24,5 +24,5 @@ func (s *Subscriber) Subscribe(subject string, handler func()) error {
 }
 
 func (s *Subscriber) Close() {
-    s.conn.Close()
+	s.conn.Close()
 }

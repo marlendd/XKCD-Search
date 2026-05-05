@@ -9,9 +9,9 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
-	"github.com/stretchr/testify/assert"
 	"github.com/marlendd/XKCD-Search/search/adapters/db"
 	"github.com/marlendd/XKCD-Search/search/core"
+	"github.com/stretchr/testify/assert"
 )
 
 func newDB(t *testing.T) (*db.DB, sqlmock.Sqlmock) {

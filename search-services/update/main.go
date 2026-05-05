@@ -9,8 +9,6 @@ import (
 	"os"
 	"os/signal"
 
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 	updatepb "github.com/marlendd/XKCD-Search/proto/update"
 	"github.com/marlendd/XKCD-Search/update/adapters/db"
 	updategrpc "github.com/marlendd/XKCD-Search/update/adapters/grpc"
@@ -19,6 +17,8 @@ import (
 	"github.com/marlendd/XKCD-Search/update/adapters/xkcd"
 	"github.com/marlendd/XKCD-Search/update/config"
 	"github.com/marlendd/XKCD-Search/update/core"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -62,7 +62,7 @@ func run(cfg config.Config, log *slog.Logger) error {
 	if err != nil {
 		return fmt.Errorf("failed create Words client: %v", err)
 	}
-	
+
 	// message broker
 	publisher, err := nats.New(cfg.BrokerAddress)
 	if err != nil {
@@ -80,8 +80,6 @@ func run(cfg config.Config, log *slog.Logger) error {
 	if err != nil {
 		return fmt.Errorf("failed to listen: %v", err)
 	}
-
-	
 
 	s := grpc.NewServer()
 	updatepb.RegisterUpdateServer(s, updategrpc.NewServer(updater))

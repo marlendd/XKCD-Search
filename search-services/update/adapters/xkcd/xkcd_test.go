@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/marlendd/XKCD-Search/update/adapters/xkcd"
 	"github.com/marlendd/XKCD-Search/update/core"
+	"github.com/stretchr/testify/assert"
 )
 
 type getResponse struct {

@@ -7,10 +7,10 @@ import (
 	"log/slog"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-	"go.uber.org/mock/gomock"
 	"github.com/marlendd/XKCD-Search/search/core"
 	"github.com/marlendd/XKCD-Search/search/mocks"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestSearch_Search(t *testing.T) {
@@ -18,13 +18,13 @@ func TestSearch_Search(t *testing.T) {
 
 	mockWords := mocks.NewMockWords(c)
 	mockDB := mocks.NewMockDB(c)
-	
+
 	mockWords.EXPECT().Norm(gomock.Any(), gomock.Any()).
-	Return([]string{}, nil)
+		Return([]string{}, nil)
 
 	mockDB.EXPECT().Search(gomock.Any(), gomock.Any(), gomock.Any()).
-	Return([]core.Comic{}, nil)
-	
+		Return([]core.Comic{}, nil)
+
 	log := slog.New(slog.NewTextHandler(io.Discard, nil))
 	service := core.NewService(log, mockDB, mockWords)
 	_, err := service.Search(context.Background(), "", 1)
@@ -35,13 +35,13 @@ func TestSearch_SearchWordsErr(t *testing.T) {
 	c := gomock.NewController(t)
 
 	mockWords := mocks.NewMockWords(c)
-	
+
 	mockWords.EXPECT().Norm(gomock.Any(), gomock.Any()).
-	Return([]string{}, errors.New("words error"))
-	
+		Return([]string{}, errors.New("words error"))
+
 	log := slog.New(slog.NewTextHandler(io.Discard, nil))
 	service := core.NewService(log, nil, mockWords)
-	
+
 	result, err := service.Search(context.Background(), "", 1)
 	require.Equal(t, core.SearchResult{}, result)
 	require.Error(t, err)
@@ -52,13 +52,13 @@ func TestSearch_SearchDbErr(t *testing.T) {
 
 	mockWords := mocks.NewMockWords(c)
 	mockDB := mocks.NewMockDB(c)
-	
+
 	mockWords.EXPECT().Norm(gomock.Any(), gomock.Any()).
-	Return([]string{}, nil)
+		Return([]string{}, nil)
 
 	mockDB.EXPECT().Search(gomock.Any(), gomock.Any(), gomock.Any()).
-	Return([]core.Comic{}, errors.New("db error"))
-	
+		Return([]core.Comic{}, errors.New("db error"))
+
 	log := slog.New(slog.NewTextHandler(io.Discard, nil))
 	service := core.NewService(log, mockDB, mockWords)
 	_, err := service.Search(context.Background(), "", 1)
@@ -69,10 +69,10 @@ func TestSearch_ISearch(t *testing.T) {
 	c := gomock.NewController(t)
 
 	mockWords := mocks.NewMockWords(c)
-	
+
 	mockWords.EXPECT().Norm(gomock.Any(), gomock.Any()).
-	Return([]string{}, nil)
-	
+		Return([]string{}, nil)
+
 	log := slog.New(slog.NewTextHandler(io.Discard, nil))
 	service := core.NewService(log, nil, mockWords)
 	_, err := service.ISearch(context.Background(), "", 1)
@@ -80,28 +80,28 @@ func TestSearch_ISearch(t *testing.T) {
 }
 
 func TestSearch_ISearchWithIndex(t *testing.T) {
-    c := gomock.NewController(t)
-    mockDB := mocks.NewMockDB(c)
-    mockWords := mocks.NewMockWords(c)
+	c := gomock.NewController(t)
+	mockDB := mocks.NewMockDB(c)
+	mockWords := mocks.NewMockWords(c)
 
-    mockDB.EXPECT().AllComics(gomock.Any()).Return([]core.StoredComic{
-        {ID: 1, URL: "http://a.com", Words: []string{"linux"}},
-        {ID: 2, URL: "http://b.com", Words: []string{"linux", "cpu"}},
-    }, nil)
-    mockWords.EXPECT().Norm(gomock.Any(), gomock.Any()).Return([]string{"linux"}, nil)
+	mockDB.EXPECT().AllComics(gomock.Any()).Return([]core.StoredComic{
+		{ID: 1, URL: "http://a.com", Words: []string{"linux"}},
+		{ID: 2, URL: "http://b.com", Words: []string{"linux", "cpu"}},
+	}, nil)
+	mockWords.EXPECT().Norm(gomock.Any(), gomock.Any()).Return([]string{"linux"}, nil)
 
-    log := slog.New(slog.NewTextHandler(io.Discard, nil))
-    service := core.NewService(log, mockDB, mockWords)
+	log := slog.New(slog.NewTextHandler(io.Discard, nil))
+	service := core.NewService(log, mockDB, mockWords)
 
-    err := service.BuildIndex(context.Background())
-    require.NoError(t, err)
+	err := service.BuildIndex(context.Background())
+	require.NoError(t, err)
 
-    result, err := service.ISearch(context.Background(), "linux", 10)
-    require.NoError(t, err)
-    require.Len(t, result.Comics, 2)
-    // Equal score for "linux"; tie-break by comic ID ascending.
-    require.Equal(t, 1, result.Comics[0].ID)
-    require.Equal(t, 2, result.Comics[1].ID)
+	result, err := service.ISearch(context.Background(), "linux", 10)
+	require.NoError(t, err)
+	require.Len(t, result.Comics, 2)
+	// Equal score for "linux"; tie-break by comic ID ascending.
+	require.Equal(t, 1, result.Comics[0].ID)
+	require.Equal(t, 2, result.Comics[1].ID)
 }
 
 func TestSearch_ISearchOrderByScoreAndID(t *testing.T) {
@@ -132,13 +132,13 @@ func TestSearch_ISearchWordsErr(t *testing.T) {
 	c := gomock.NewController(t)
 
 	mockWords := mocks.NewMockWords(c)
-	
+
 	mockWords.EXPECT().Norm(gomock.Any(), gomock.Any()).
-	Return([]string{}, errors.New("words error"))
-	
+		Return([]string{}, errors.New("words error"))
+
 	log := slog.New(slog.NewTextHandler(io.Discard, nil))
 	service := core.NewService(log, nil, mockWords)
-	
+
 	result, err := service.ISearch(context.Background(), "", 1)
 	require.Equal(t, core.SearchResult{}, result)
 	require.Error(t, err)
@@ -150,8 +150,8 @@ func TestSearch_BuildIndex(t *testing.T) {
 	mockDB := mocks.NewMockDB(c)
 
 	mockDB.EXPECT().AllComics(gomock.Any()).
-	Return([]core.StoredComic{}, nil)
-	
+		Return([]core.StoredComic{}, nil)
+
 	log := slog.New(slog.NewTextHandler(io.Discard, nil))
 	service := core.NewService(log, mockDB, nil)
 	err := service.BuildIndex(context.Background())
@@ -164,8 +164,8 @@ func TestSearch_BuildIndexDbErr(t *testing.T) {
 	mockDB := mocks.NewMockDB(c)
 
 	mockDB.EXPECT().AllComics(gomock.Any()).
-	Return([]core.StoredComic{}, errors.New("db error"))
-	
+		Return([]core.StoredComic{}, errors.New("db error"))
+
 	log := slog.New(slog.NewTextHandler(io.Discard, nil))
 	service := core.NewService(log, mockDB, nil)
 	err := service.BuildIndex(context.Background())

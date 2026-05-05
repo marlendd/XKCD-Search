@@ -13,10 +13,10 @@ import (
 	context "context"
 	reflect "reflect"
 
+	search "github.com/marlendd/XKCD-Search/proto/search"
 	gomock "go.uber.org/mock/gomock"
 	grpc "google.golang.org/grpc"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	search "github.com/marlendd/XKCD-Search/proto/search"
 )
 
 // MockSearchClient is a mock of SearchClient interface.

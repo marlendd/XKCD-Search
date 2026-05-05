@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
 	"github.com/marlendd/XKCD-Search/api/adapters/rest/middleware"
 	"github.com/marlendd/XKCD-Search/api/core"
 	"github.com/marlendd/XKCD-Search/api/mocks"
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestAuth(t *testing.T) {
@@ -22,54 +22,54 @@ func TestAuth(t *testing.T) {
 	mockVerifier := mocks.NewMockTokenVerifier(c)
 
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        w.WriteHeader(http.StatusOK)
-    })
+		w.WriteHeader(http.StatusOK)
+	})
 
-	cases := []struct{
-		name string
-		header string
-		setupMock func()
+	cases := []struct {
+		name         string
+		header       string
+		setupMock    func()
 		expectedCode int
 	}{
 		{
-			name: "no header",
-			header: "",
-			setupMock: func() {},
+			name:         "no header",
+			header:       "",
+			setupMock:    func() {},
 			expectedCode: http.StatusUnauthorized,
 		},
 		{
-			name: "invalid token",
-			header: "jwt-token-123",
-			setupMock: func() {},
+			name:         "invalid token",
+			header:       "jwt-token-123",
+			setupMock:    func() {},
 			expectedCode: http.StatusUnauthorized,
 		},
 		{
-			name: "valid token",
+			name:   "valid token",
 			header: "Token jwt-token-123",
 			setupMock: func() {
 				mockVerifier.EXPECT().
-				Verify("jwt-token-123").
-				Return(nil)
+					Verify("jwt-token-123").
+					Return(nil)
 			},
 			expectedCode: http.StatusOK,
 		},
 		{
-			name: "unauthorized token",
+			name:   "unauthorized token",
 			header: "Token not-token",
 			setupMock: func() {
 				mockVerifier.EXPECT().
-				Verify("not-token").
-				Return(core.ErrNotAuthorized)
+					Verify("not-token").
+					Return(core.ErrNotAuthorized)
 			},
 			expectedCode: http.StatusUnauthorized,
 		},
 		{
-			name: "internal error",
+			name:   "internal error",
 			header: "Token not-token",
 			setupMock: func() {
 				mockVerifier.EXPECT().
-				Verify("not-token").
-				Return(errors.New("some error"))
+					Verify("not-token").
+					Return(errors.New("some error"))
 			},
 			expectedCode: http.StatusInternalServerError,
 		},

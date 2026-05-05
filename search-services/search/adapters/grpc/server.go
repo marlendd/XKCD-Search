@@ -3,21 +3,21 @@ package grpc
 import (
 	"context"
 
-	"google.golang.org/protobuf/types/known/emptypb"
 	searchpb "github.com/marlendd/XKCD-Search/proto/search"
 	"github.com/marlendd/XKCD-Search/search/core"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func NewServer(searcher core.Searcher, isearcher core.ISearcher) *Server {
 	return &Server{
-		searcher: searcher,
+		searcher:  searcher,
 		isearcher: isearcher,
 	}
 }
 
 type Server struct {
 	searchpb.UnimplementedSearchServer
-	searcher core.Searcher
+	searcher  core.Searcher
 	isearcher core.ISearcher
 }
 

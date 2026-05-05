@@ -13,8 +13,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	gomock "go.uber.org/mock/gomock"
 	core "github.com/marlendd/XKCD-Search/search/core"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockSearcher is a mock of Searcher interface.

@@ -6,15 +6,15 @@ import (
 	"log/slog"
 	"testing"
 
+	wordspb "github.com/marlendd/XKCD-Search/proto/words"
+	"github.com/marlendd/XKCD-Search/search/adapters/words"
+	"github.com/marlendd/XKCD-Search/search/core"
+	"github.com/marlendd/XKCD-Search/search/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"github.com/marlendd/XKCD-Search/search/adapters/words"
-	"github.com/marlendd/XKCD-Search/search/core"
-	"github.com/marlendd/XKCD-Search/search/mocks"
-	wordspb "github.com/marlendd/XKCD-Search/proto/words"
 )
 
 func newClient(t *testing.T) (*words.Client, *mocks.MockWordsClient) {

@@ -55,8 +55,6 @@ func main() {
 		os.Exit(1)
 	}
 
-
-
 	mux := http.NewServeMux()
 	mux.Handle("GET /api/ping", rest.NewPingHandler(log, map[string]core.Pinger{
 		"words":  wordsClient,

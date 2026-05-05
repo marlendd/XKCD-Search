@@ -4,12 +4,13 @@ import (
 	"context"
 	"log/slog"
 
+	"github.com/marlendd/XKCD-Search/api/core"
+	searchpb "github.com/marlendd/XKCD-Search/proto/search"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"github.com/marlendd/XKCD-Search/api/core"
-	searchpb "github.com/marlendd/XKCD-Search/proto/search"
 )
+
 //go:generate mockgen -destination=../../mocks/mock_search_client.go -package=mocks github.com/marlendd/XKCD-Search/proto/search SearchClient
 
 // только для тестов
@@ -41,7 +42,7 @@ func (c Client) Ping(ctx context.Context) error {
 
 func (c Client) Search(ctx context.Context, phrase string, limit int) (core.SearchResult, error) {
 	reply, err := c.client.Search(ctx, &searchpb.SearchRequest{
-		Limit: int64(limit),
+		Limit:  int64(limit),
 		Phrase: phrase,
 	})
 	if err != nil {
@@ -57,7 +58,7 @@ func (c Client) Search(ctx context.Context, phrase string, limit int) (core.Sear
 
 func (c Client) ISearch(ctx context.Context, phrase string, limit int) (core.SearchResult, error) {
 	reply, err := c.client.ISearch(ctx, &searchpb.SearchRequest{
-		Limit: int64(limit),
+		Limit:  int64(limit),
 		Phrase: phrase,
 	})
 	if err != nil {

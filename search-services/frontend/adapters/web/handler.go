@@ -1,12 +1,12 @@
 package web
 
 import (
+	"html/template"
 	"log/slog"
 	"net/http"
 	"path/filepath"
 	"strconv"
 	"strings"
-	"html/template"
 	"time"
 
 	"github.com/marlendd/XKCD-Search/frontend/core"

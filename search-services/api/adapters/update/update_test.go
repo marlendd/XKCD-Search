@@ -5,15 +5,15 @@ import (
 	"log/slog"
 	"testing"
 
+	"github.com/marlendd/XKCD-Search/api/adapters/update"
+	"github.com/marlendd/XKCD-Search/api/core"
+	"github.com/marlendd/XKCD-Search/api/mocks"
+	updatepb "github.com/marlendd/XKCD-Search/proto/update"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"github.com/marlendd/XKCD-Search/api/adapters/update"
-	"github.com/marlendd/XKCD-Search/api/core"
-	"github.com/marlendd/XKCD-Search/api/mocks"
-	updatepb "github.com/marlendd/XKCD-Search/proto/update"
 )
 
 func newClient(t *testing.T) (*update.Client, *mocks.MockUpdateClient) {
