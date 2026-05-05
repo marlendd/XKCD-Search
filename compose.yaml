@@ -66,6 +66,22 @@ services:
       nats:
         condition: service_started
 
+  frontend:
+    image: frontend:latest
+    build:
+      context: search-services
+      dockerfile: Dockerfile.frontend
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - 28084:8080
+    volumes:
+      - ./search-services/frontend/config.yaml:/config.yaml
+    environment:
+      - FRONTEND_ADDRESS=:8080
+      - API_ADDRESS=http://api:8080
+      - TOKEN_TTL=2m
+
   tests:
     image: tests:latest
     build: tests

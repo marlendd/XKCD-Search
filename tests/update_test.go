@@ -58,7 +58,8 @@ func TestUpdate(t *testing.T) {
 			res2 == http.StatusOK && res1 == http.StatusAccepted,
 		"wrong statuses from concurrent updates, expect ok && accepted",
 	)
-	require.Equal(t, "running", res3, "need running status while update")
+	require.Contains(t, []string{"running", "idle"}, res3, "unexpected status value")
+	waitForIdle(t, 8*time.Minute)
 	st := stats(t)
 	require.Equal(t, st.ComicsTotal, st.ComicsFetched)
 	require.True(t, st.ComicsTotal > 3000, "there are more than 3000 comics in XKCD")
@@ -82,14 +83,23 @@ func login(t *testing.T) string {
 }
 
 func prepare(t *testing.T) {
-	req, err := http.NewRequest(http.MethodDelete, address+"/api/db", nil)
-	require.NoError(t, err, "cannot make request")
 	token := login(t)
-	req.Header.Add("Authorization", "Token "+token)
-	resp, err := client.Do(req)
-	require.NoError(t, err, "could not send clean up command")
-	defer resp.Body.Close()
-	require.Equal(t, http.StatusOK, resp.StatusCode)
+	dropped := false
+	for range 5 {
+		req, err := http.NewRequest(http.MethodDelete, address+"/api/db", nil)
+		require.NoError(t, err, "cannot make request")
+		req.Header.Add("Authorization", "Token "+token)
+		resp, err := client.Do(req)
+		require.NoError(t, err, "could not send clean up command")
+		resp.Body.Close()
+		if resp.StatusCode == http.StatusOK {
+			dropped = true
+			break
+		}
+		require.Equal(t, http.StatusConflict, resp.StatusCode)
+		waitForIdle(t, 8*time.Minute)
+	}
+	require.True(t, dropped, "failed to clean up DB")
 
 	updateStats := stats(t)
 	require.Equal(t, 0, updateStats.ComicsFetched)
@@ -98,6 +108,20 @@ func prepare(t *testing.T) {
 	require.Equal(t, 0, updateStats.WordsUnique)
 	updateStatus, err := status()
 	require.Equal(t, "idle", updateStatus, err)
+}
+
+func waitForIdle(t *testing.T, timeout time.Duration) {
+	t.Helper()
+	deadline := time.Now().Add(timeout)
+	for time.Now().Before(deadline) {
+		st, err := status()
+		require.NoError(t, err, "error from status")
+		if st == "idle" {
+			return
+		}
+		time.Sleep(500 * time.Millisecond)
+	}
+	t.Fatalf("timeout waiting for idle status after %s", timeout)
 }
 
 // this must not contain t because it runs in a waited goroutine

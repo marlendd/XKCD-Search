@@ -77,7 +77,10 @@ func (s *Service) ISearch(ctx context.Context, phrase string, limit int) (Search
 	}
 
 	sort.Slice(comics, func(i, j int) bool {
-		return comics[i].Score > comics[j].Score
+		if comics[i].Score != comics[j].Score {
+			return comics[i].Score > comics[j].Score
+		}
+		return comics[i].ID < comics[j].ID
 	})
 
 	n := min(limit, len(comics))

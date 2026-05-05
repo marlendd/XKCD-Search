@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f172a">
+    <title>Вход · Админка</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        :root {
+            --bg: #0f172a;
+            --surface: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #38bdf8;
+            --border: #e2e8f0;
+            --error: #dc2626;
+            --error-bg: #fef2f2;
+            --radius: 14px;
+            --radius-sm: 10px;
+            --shadow: 0 12px 40px rgba(15, 23, 42, 0.35);
+            --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: var(--font);
+            font-size: 16px;
+            line-height: 1.55;
+            color: var(--surface);
+            background: radial-gradient(1200px 600px at 80% -10%, rgba(56, 189, 248, 0.35), transparent),
+                        radial-gradient(900px 500px at -10% 100%, rgba(99, 102, 241, 0.28), transparent),
+                        var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        a { color: var(--accent); text-decoration: none; transition: color 0.15s ease; }
+        a:hover { color: #7dd3fc; text-decoration: underline; }
+        .panel {
+            width: 100%;
+            max-width: 400px;
+        }
+        .brand {
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(248, 250, 252, 0.55);
+            margin-bottom: 0.35rem;
+            text-align: center;
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0 0 1.25rem;
+            text-align: center;
+            color: var(--surface);
+        }
+        .card {
+            background: var(--surface);
+            color: var(--text);
+            border-radius: var(--radius);
+            padding: 1.75rem 1.5rem 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 0.35rem;
+            margin-top: 0.9rem;
+        }
+        label:first-of-type { margin-top: 0; }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.65rem 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font: inherit;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+        }
+        button[type="submit"] {
+            margin-top: 1.25rem;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+            transition: transform 0.1s ease, box-shadow 0.15s ease;
+        }
+        button[type="submit"]:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+        }
+        .alert {
+            background: var(--error-bg);
+            color: var(--error);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 1rem;
+            border: 1px solid #fecaca;
+        }
+        .back {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+<div class="panel">
+    <p class="brand">Администрирование</p>
+    <h1>Вход</h1>
+    <div class="card">
+        <form method="post" action="/login">
+            <label for="name">Имя пользователя</label>
+            <input id="name" name="name" type="text" value="{{ .Name }}" required autocomplete="username">
+
+            <label for="password">Пароль</label>
+            <input id="password" name="password" type="password" required autocomplete="current-password">
+
+            <button type="submit">Войти</button>
+        </form>
+        {{ if .Error }}
+        <div class="alert" role="alert">{{ .Error }}</div>
+        {{ end }}
+    </div>
+    <p class="back"><a href="/">← К поиску</a></p>
+</div>
+</body>
+</html>

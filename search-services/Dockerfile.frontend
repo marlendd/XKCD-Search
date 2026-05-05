@@ -1,0 +1,19 @@
+FROM golang:1.25 AS build
+
+RUN apt update && apt install -y protobuf-compiler
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+ENV PATH="$PATH:$(go env GOPATH)/bin"
+
+COPY go.mod go.sum /src/
+COPY frontend /src/frontend
+
+ENV CGO_ENABLED=0
+RUN cd /src && go build -o /frontend frontend/cmd/main.go
+
+FROM alpine:3.20
+
+COPY --from=build /frontend /frontend
+COPY --from=build /src/frontend/adapters/web/templates /adapters/web/templates
+
+ENTRYPOINT [ "/frontend" ]

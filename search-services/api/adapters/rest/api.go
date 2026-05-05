@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -126,6 +127,29 @@ func NewPingHandler(log *slog.Logger, pingers map[string]core.Pinger) http.Handl
 
 func NewUpdateHandler(log *slog.Logger, updater core.Updater) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		status, err := updater.Status(r.Context())
+		if err != nil {
+			log.Error("failed to get status", "error", err)
+			http.Error(w, "failed to update", http.StatusInternalServerError)
+			return
+		}
+		if status == core.StatusUpdateRunning {
+			w.WriteHeader(http.StatusAccepted)
+			return
+		}
+
+		// By default update is synchronous (integration tests expect that).
+		// Async mode is enabled explicitly, e.g. from browser-facing frontend.
+		if r.URL.Query().Get("async") == "1" {
+			go func() {
+				if err := updater.Update(context.Background()); err != nil && !errors.Is(err, core.ErrAlreadyExists) {
+					log.Error("failed to update", "error", err)
+				}
+			}()
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
 		if err := updater.Update(r.Context()); err != nil {
 			if errors.Is(err, core.ErrAlreadyExists) {
 				w.WriteHeader(http.StatusAccepted)

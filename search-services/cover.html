@@ -2313,7 +2313,6 @@ import (
 
 const tokenCookieName = "token"
 
-// RequireAuth пропускает запрос только при непустой cookie с JWT; иначе — редирект на /login.
 func RequireAuth(next http.Handler) http.Handler <span class="cov0" title="0">{
         return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
                 c, err := r.Cookie(tokenCookieName)

@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"log/slog"
@@ -8,6 +9,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -251,10 +253,18 @@ func TestNewUpdateHandler(t *testing.T) {
 	log := slog.Default()
 	mockUpdater := mocks.NewMockUpdater(c)
 
-	t.Run("successfull update", func(t *testing.T) {
+	t.Run("successful async update start", func(t *testing.T) {
+		mockUpdater.EXPECT().
+			Status(gomock.Any()).
+			Return(core.StatusUpdateIdle, nil)
+
+		called := make(chan struct{})
 		mockUpdater.EXPECT().
 			Update(gomock.Any()).
-			Return(nil)
+			DoAndReturn(func(_ context.Context) error {
+				close(called)
+				return nil
+			})
 
 		handler := NewUpdateHandler(log, mockUpdater)
 		req := httptest.NewRequest(http.MethodPost, "/update", nil)
@@ -263,11 +273,18 @@ func TestNewUpdateHandler(t *testing.T) {
 		handler(rec, req)
 
 		assert.Equal(t, http.StatusOK, rec.Code)
+
+		select {
+		case <-called:
+		case <-time.After(100 * time.Millisecond):
+			t.Fatal("background update was not started")
+		}
 	})
-	t.Run("failed update", func(t *testing.T) {
+
+	t.Run("failed status", func(t *testing.T) {
 		mockUpdater.EXPECT().
-			Update(gomock.Any()).
-			Return(errors.New("updater error"))
+			Status(gomock.Any()).
+			Return(core.StatusUpdateUnknown, errors.New("status error"))
 
 		handler := NewUpdateHandler(log, mockUpdater)
 		req := httptest.NewRequest(http.MethodPost, "/update", nil)
@@ -277,10 +294,11 @@ func TestNewUpdateHandler(t *testing.T) {
 
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 	})
-	t.Run("failed update due to already exists", func(t *testing.T) {
+
+	t.Run("update already running", func(t *testing.T) {
 		mockUpdater.EXPECT().
-			Update(gomock.Any()).
-			Return(core.ErrAlreadyExists)
+			Status(gomock.Any()).
+			Return(core.StatusUpdateRunning, nil)
 
 		handler := NewUpdateHandler(log, mockUpdater)
 		req := httptest.NewRequest(http.MethodPost, "/update", nil)

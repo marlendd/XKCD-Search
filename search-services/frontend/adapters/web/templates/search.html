@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f172a">
+    <title>Поиск комиксов · xkcd</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        :root {
+            --bg: #0f172a;
+            --bg-elevated: #1e293b;
+            --surface: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #38bdf8;
+            --accent-deep: #0284c7;
+            --border: #e2e8f0;
+            --error: #dc2626;
+            --error-bg: #fef2f2;
+            --radius: 14px;
+            --radius-sm: 10px;
+            --shadow: 0 12px 40px rgba(15, 23, 42, 0.35);
+            --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: var(--font);
+            font-size: 16px;
+            line-height: 1.55;
+            color: var(--surface);
+            background: radial-gradient(1200px 600px at 80% -10%, rgba(56, 189, 248, 0.35), transparent),
+                        radial-gradient(900px 500px at -10% 100%, rgba(99, 102, 241, 0.28), transparent),
+                        var(--bg);
+        }
+        a { color: var(--accent); text-decoration: none; transition: color 0.15s ease; }
+        a:hover { color: #7dd3fc; text-decoration: underline; }
+        .page {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 2.5rem 1.25rem 3rem;
+        }
+        .brand {
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(248, 250, 252, 0.55);
+            margin-bottom: 0.35rem;
+        }
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0 0 1.25rem;
+            color: var(--surface);
+        }
+        .card {
+            background: var(--surface);
+            color: var(--text);
+            border-radius: var(--radius);
+            padding: 1.5rem 1.5rem 1.35rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+        .card h2 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin: 0 0 1rem;
+            color: var(--text);
+        }
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 0.35rem;
+            margin-top: 0.85rem;
+        }
+        label:first-of-type { margin-top: 0; }
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 0.65rem 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font: inherit;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-deep);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+        }
+        fieldset {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1rem 1rem;
+            margin: 1rem 0 0;
+        }
+        legend {
+            padding: 0 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--muted);
+        }
+        .mode-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .mode-option:first-of-type { margin-top: 0; }
+        .mode-option input { width: auto; accent-color: var(--accent-deep); }
+        button[type="submit"] {
+            margin-top: 1.15rem;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+            transition: transform 0.1s ease, box-shadow 0.15s ease;
+        }
+        button[type="submit"]:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+        }
+        button[type="submit"]:active { transform: translateY(0); }
+        .alert {
+            background: var(--error-bg);
+            color: var(--error);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            border: 1px solid #fecaca;
+        }
+        .results-meta {
+            font-size: 0.9rem;
+            color: rgba(248, 250, 252, 0.75);
+            margin-bottom: 0.75rem;
+        }
+        .result-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+        .result-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: #fff;
+        }
+        .result-thumb {
+            flex-shrink: 0;
+            width: 100px;
+            height: auto;
+            max-height: 120px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: #f1f5f9;
+        }
+        .result-body { min-width: 0; }
+        .result-id {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: 0.04em;
+            margin-bottom: 0.25rem;
+        }
+        .result-link {
+            word-break: break-all;
+            font-size: 0.9rem;
+            color: var(--accent-deep);
+        }
+        .result-link:hover { color: #0369a1; }
+        .footer-link {
+            text-align: center;
+            margin-top: 1.75rem;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <p class="brand">xkcd search</p>
+    <h1>Поиск комиксов</h1>
+
+    <div class="card">
+        <form method="post" action="/">
+            <label for="phrase">Фраза</label>
+            <input id="phrase" name="phrase" type="text" value="{{ .Phrase }}" placeholder="Например: linux, apple, captcha…" required autocomplete="off">
+
+            <label for="limit">Лимит результатов</label>
+            <input id="limit" name="limit" type="number" min="1" max="100" value="{{ .Limit }}">
+
+            <fieldset>
+                <legend>Режим</legend>
+                <label class="mode-option">
+                    <input type="radio" name="mode" value="search" {{ if ne .Mode "isearch" }}checked{{ end }}>
+                    Поиск по БД (search)
+                </label>
+                <label class="mode-option">
+                    <input type="radio" name="mode" value="isearch" {{ if eq .Mode "isearch" }}checked{{ end }}>
+                    Поиск по индексу (isearch)
+                </label>
+            </fieldset>
+
+            <button type="submit">Найти</button>
+        </form>
+    </div>
+
+    {{ if .Error }}
+    <div class="alert" role="alert">{{ .Error }}</div>
+    {{ end }}
+
+    {{ if .HasResults }}
+    <p class="results-meta">Найдено: <strong>{{ .Total }}</strong></p>
+    <div class="card">
+        <h2>Результаты</h2>
+        <ul class="result-list">
+            {{ range .Comics }}
+            <li class="result-item">
+                {{ if contains .URL "imgs.xkcd.com" }}
+                <img class="result-thumb" src="{{ .URL }}" alt="Комикс #{{ .ID }}" loading="lazy" width="100">
+                {{ end }}
+                <div class="result-body">
+                    <div class="result-id">#{{ .ID }}</div>
+                    <a class="result-link" href="{{ .URL }}" target="_blank" rel="noopener noreferrer">{{ .URL }}</a>
+                </div>
+            </li>
+            {{ end }}
+        </ul>
+    </div>
+    {{ end }}
+
+    <p class="footer-link"><a href="/login">Администрирование</a></p>
+</div>
+</body>
+</html>

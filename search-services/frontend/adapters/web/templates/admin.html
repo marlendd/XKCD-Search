@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f172a">
+    <title>Админка</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        :root {
+            --bg: #0f172a;
+            --surface: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #38bdf8;
+            --border: #e2e8f0;
+            --error: #dc2626;
+            --error-bg: #fef2f2;
+            --ok: #15803d;
+            --ok-bg: #f0fdf4;
+            --warn-bg: #fffbeb;
+            --warn-text: #b45309;
+            --radius: 14px;
+            --radius-sm: 10px;
+            --shadow: 0 12px 40px rgba(15, 23, 42, 0.35);
+            --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: var(--font);
+            font-size: 16px;
+            line-height: 1.55;
+            color: var(--surface);
+            background: radial-gradient(1200px 600px at 80% -10%, rgba(56, 189, 248, 0.35), transparent),
+                        radial-gradient(900px 500px at -10% 100%, rgba(99, 102, 241, 0.28), transparent),
+                        var(--bg);
+        }
+        a { color: var(--accent); text-decoration: none; transition: color 0.15s ease; }
+        a:hover { color: #7dd3fc; text-decoration: underline; }
+        .page {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 2.5rem 1.25rem 3rem;
+        }
+        .brand {
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(248, 250, 252, 0.55);
+            margin-bottom: 0.35rem;
+        }
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0 0 1.25rem;
+            color: var(--surface);
+        }
+        .card {
+            background: var(--surface);
+            color: var(--text);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.25rem;
+        }
+        .card h2 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0 0 0.75rem;
+        }
+        .card p { margin: 0; }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .badge-idle {
+            background: var(--ok-bg);
+            color: var(--ok);
+            border: 1px solid #bbf7d0;
+        }
+        .badge-running {
+            background: var(--warn-bg);
+            color: var(--warn-text);
+            border: 1px solid #fde68a;
+        }
+        .badge-unknown {
+            background: #f1f5f9;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.85;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        @media (max-width: 480px) {
+            .stats { grid-template-columns: 1fr; }
+        }
+        .stat {
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: #fff;
+        }
+        .stat-value {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 0.25rem;
+        }
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.1s ease, box-shadow 0.15s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+        }
+        .btn-danger {
+            background: #fff;
+            color: var(--error);
+            border: 1px solid #fecaca;
+        }
+        .btn-danger:hover {
+            background: var(--error-bg);
+        }
+        .alert {
+            background: var(--error-bg);
+            color: var(--error);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+            border: 1px solid #fecaca;
+        }
+        .footer-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <p class="brand">Администрирование</p>
+    <h1>Панель управления</h1>
+
+    {{ if .Error }}
+    <div class="alert" role="alert">{{ .Error }}</div>
+    {{ end }}
+
+    <div class="card">
+        <h2>Статус обновления</h2>
+        <p>
+            {{ if eq .Status "running" }}
+            <span class="badge badge-running"><span class="badge-dot" aria-hidden="true"></span>Идёт обновление</span>
+            {{ else if eq .Status "idle" }}
+            <span class="badge badge-idle"><span class="badge-dot" aria-hidden="true"></span>Ожидание</span>
+            {{ else }}
+            <span class="badge badge-unknown">{{ .Status }}</span>
+            {{ end }}
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>Статистика</h2>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">{{ .Stats.WordsTotal }}</div>
+                <div class="stat-label">Всего слов</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">{{ .Stats.WordsUnique }}</div>
+                <div class="stat-label">Уникальных слов</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">{{ .Stats.ComicsFetched }}</div>
+                <div class="stat-label">Получено комиксов</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">{{ .Stats.ComicsTotal }}</div>
+                <div class="stat-label">Всего комиксов</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Действия</h2>
+        <div class="actions">
+            <form method="post" action="/admin/update">
+                <button type="submit" class="btn btn-primary">Запустить update</button>
+            </form>
+            <form method="post" action="/admin/drop" onsubmit="return confirm('Удалить индекс и данные в БД?');">
+                <button type="submit" class="btn btn-danger">Drop index</button>
+            </form>
+        </div>
+    </div>
+
+    <p class="footer-link"><a href="/">← К поиску</a></p>
+</div>
+</body>
+</html>
