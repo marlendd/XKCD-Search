@@ -8,6 +8,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"syscall"
 
 	"github.com/ilyakaznacheev/cleanenv"
 	wordspb "github.com/marlendd/XKCD-Search/proto/words"
@@ -74,7 +75,7 @@ func run(cfg Config) error {
 	wordspb.RegisterWordsServer(s, &server{})
 	reflection.Register(s)
 
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
 	go func() {

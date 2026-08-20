@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"syscall"
 
 	"github.com/marlendd/XKCD-Search/api/adapters/aaa"
 	"github.com/marlendd/XKCD-Search/api/adapters/rest"
@@ -77,7 +78,7 @@ func main() {
 		Handler:     middleware.WithMetrics(mux),
 	}
 
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
 	go func() {

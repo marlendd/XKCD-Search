@@ -8,6 +8,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"syscall"
 
 	updatepb "github.com/marlendd/XKCD-Search/proto/update"
 	"github.com/marlendd/XKCD-Search/update/adapters/db"
@@ -86,7 +87,7 @@ func run(cfg config.Config, log *slog.Logger) error {
 	reflection.Register(s)
 
 	// context for Ctrl-C
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
 	go func() {
