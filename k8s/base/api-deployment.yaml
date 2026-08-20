@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: api
+  namespace: xkcd
+  labels:
+    app: api
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: api
+
+  template:
+    metadata:
+      labels:
+        app: api
+
+    spec:
+      containers:
+        - name: api
+          image: api:local
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
+          env:
+            - name: ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: ADMIN_USER
+
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: ADMIN_PASSWORD
+
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: JWT_SECRET
+
+          startupProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 2
+            failureThreshold: 60
+
+          readinessProbe:
+            httpGet:
+              path: /api/ping
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+
+          volumeMounts:
+            - name: config
+              mountPath: /config.yaml
+              subPath: config.yaml
+              readOnly: true
+
+      volumes:
+        - name: config
+          configMap:
+            name: api-config

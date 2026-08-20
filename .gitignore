@@ -12,6 +12,8 @@
 *.out
 cover.html
 .env
+k8s/base/api-secret.yaml
+k8s/base/postgres-secret.yaml
 
 # Dependency directories (remove the comment below to include it)
 vendor/

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: words-config
+  namespace: xkcd
+
+data:
+  WORDS_ADDRESS: ":8080"

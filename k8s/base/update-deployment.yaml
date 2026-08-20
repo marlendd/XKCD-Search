@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: update
+  namespace: xkcd
+  labels:
+    app: update
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: update
+
+  template:
+    metadata:
+      labels:
+        app: update
+
+    spec:
+      containers:
+        - name: update
+          image: update:local
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: grpc
+              containerPort: 8080
+              protocol: TCP
+
+          envFrom:
+            - configMapRef:
+                name: update-config
+
+          env:
+            - name: DB_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: DB_ADDRESS
+
+          startupProbe:
+            tcpSocket:
+              port: grpc
+            periodSeconds: 2
+            failureThreshold: 60
+
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 3
+
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"

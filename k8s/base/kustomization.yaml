@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+  - nats-deployment.yaml
+  - nats-service.yaml
+  - postgres-service.yaml
+  - postgres-statefulset.yaml
+  - words-configmap.yaml
+  - words-deployment.yaml
+  - words-service.yaml
+  - words-hpa.yaml
+  - update-configmap.yaml
+  - update-deployment.yaml
+  - update-service.yaml
+  - search-configmap.yaml
+  - search-deployment.yaml
+  - search-service.yaml
+  - api-configmap.yaml
+  - api-deployment.yaml
+  - api-service.yaml
+  - frontend-configmap.yaml
+  - frontend-deployment.yaml
+  - frontend-service.yaml

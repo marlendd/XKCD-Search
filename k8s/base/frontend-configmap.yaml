@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: frontend-config
+  namespace: xkcd
+
+data:
+  LOG_LEVEL: INFO
+  FRONTEND_ADDRESS: ":8080"
+  BASE_URL: "http://api:8080"
+  TOKEN_TTL: "2m"
+  TIMEOUT: "5s"

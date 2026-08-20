@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: words
+  namespace: xkcd
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: words
+
+  template:
+    metadata:
+      labels:
+        app: words
+
+    spec:
+      containers:
+        - name: words
+          image: words:local
+          imagePullPolicy: IfNotPresent
+
+          env:
+            - name: WORDS_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: words-config
+                  key: WORDS_ADDRESS
+
+          ports:
+            - name: grpc
+              containerPort: 8080
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 3
+
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "32Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"

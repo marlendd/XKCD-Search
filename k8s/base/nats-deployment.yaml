@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: nats
+  namespace: xkcd
+  labels:
+    app: nats
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: nats
+
+  template:
+    metadata:
+      labels:
+        app: nats
+
+    spec:
+      containers:
+        - name: nats
+          image: nats:2-alpine
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: client
+              containerPort: 4222
+
+          readinessProbe:
+            tcpSocket:
+              port: client
+            initialDelaySeconds: 1
+            periodSeconds: 5
+
+          livenessProbe:
+            tcpSocket:
+              port: client
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "32Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"

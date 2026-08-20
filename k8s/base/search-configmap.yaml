@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: search-config
+  namespace: xkcd
+
+data:
+  SEARCH_ADDRESS: ":8080"
+  WORDS_ADDRESS: "words:8080"
+  INDEX_TTL: "24h"
+  BROKER_ADDRESS: "nats://nats:4222"

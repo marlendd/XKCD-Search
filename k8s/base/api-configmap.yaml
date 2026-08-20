@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: api-config
+  namespace: xkcd
+
+data:
+  config.yaml: |
+    log_level: INFO
+    search_concurrency: 10
+    search_rate: 100
+    token_ttl: 2m
+    words_address: words:8080
+    update_address: update:8080
+    search_address: search:8080
+    api_server:
+      address: :8080
+      timeout: 5s

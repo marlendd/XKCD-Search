@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: update-config
+  namespace: xkcd
+
+data:
+  UPDATE_ADDRESS: ":8080"
+  XKCD_URL: "https://xkcd.com"
+  XKCD_CONCURRENCY: "10"
+  WORDS_ADDRESS: "words:8080"
+  BROKER_ADDRESS: "nats://nats:4222"
